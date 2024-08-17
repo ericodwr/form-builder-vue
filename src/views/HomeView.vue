@@ -1,18 +1,21 @@
-<template>
-  <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
-  </div>
-</template>
+<script setup lang="ts">
+import { defineComponent, onMounted, ref, toRaw } from 'vue';
+import MultiStep from '@/components/MultiStep.vue'; // @ is an alias to /src
+import { StepForm } from '@/types/types';
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+const data = ref<StepForm[]>([]);
 
-export default defineComponent({
-  name: 'HomeView',
-  components: {
-    HelloWorld,
-  },
+const fetchData = async () => {
+  const newData = await fetch('response.json');
+  const result = await newData.json();
+  data.value = result;
+};
+
+onMounted(() => {
+  fetchData();
 });
 </script>
+
+<template>
+  <MultiStep :data="data" />
+</template>
